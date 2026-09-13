@@ -9,7 +9,7 @@
         body { background-color: #1e1e2e; color: #fff; display: flex; flex-direction: column; height: 100vh; }
         header { background: #11111b; padding: 15px 20px; text-align: center; border-bottom: 1px solid #313244; }
         #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .message { padding: 12px 16px; border-radius: 12px; max-width: 80%; line-height: 1.4; }
+        .message { padding: 12px 16px; border-radius: 12px; max-width: 80%; line-height: 1.4; word-wrap: break-word; }
         .user-msg { background: #89b4fa; color: #11111b; align-self: flex-end; }
         .ai-msg { background: #313244; color: #cdd6f4; align-self: flex-start; }
         #input-area { background: #181825; padding: 15px; display: flex; gap: 10px; align-items: center; border-top: 1px solid #313244; }
@@ -30,22 +30,40 @@
     <div id="input-area">
         <label class="btn btn-attach" for="file-input">??</label>
         <input type="file" id="file-input">
-        <input type="text" id="user-input" placeholder="Escribe un mensaje o consulta...">
+        <input type="text" id="user-input" placeholder="Escribe un mensaje o consulta..." onkeypress="if(event.key===\"Enter\") sendMessage()">
         <button class="btn btn-send" onclick="sendMessage()">Enviar</button>
     </div>
     <script>
-        function sendMessage() {
+        async function sendMessage() {
             const input = document.getElementById("user-input");
             const text = input.value.trim();
             if (!text) return;
             
             const container = document.getElementById("chat-container");
+            
+            // Mostrar mensaje del usuario
             const userMsg = document.createElement("div");
             userMsg.className = "message user-msg";
             userMsg.textContent = text;
             container.appendChild(userMsg);
-
             input.value = "";
+            container.scrollTop = container.scrollHeight;
+
+            // Mostrar estado pensando
+            const aiMsg = document.createElement("div");
+            aiMsg.className = "message ai-msg";
+            aiMsg.textContent = "Pensando...";
+            container.appendChild(aiMsg);
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                // Conexión con el motor generativo
+                const response = await fetch("https://text.pollinations.ai/" + encodeURIComponent(text));
+                const data = await response.text();
+                aiMsg.textContent = data || "No pude procesar la respuesta.";
+            } catch (error) {
+                aiMsg.textContent = "Error al conectar con la Inteligencia Artificial.";
+            }
             container.scrollTop = container.scrollHeight;
         }
     </script>
