@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiPropiaIA - Asistente Inteligente</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #1e1e2e; color: #fff; display: flex; flex-direction: column; height: 100vh; }
+        header { background: #11111b; padding: 15px 20px; text-align: center; border-bottom: 1px solid #313244; }
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .message { padding: 12px 16px; border-radius: 12px; max-width: 80%; line-height: 1.4; }
+        .user-msg { background: #89b4fa; color: #11111b; align-self: flex-end; }
+        .ai-msg { background: #313244; color: #cdd6f4; align-self: flex-start; }
+        #input-area { background: #181825; padding: 15px; display: flex; gap: 10px; align-items: center; border-top: 1px solid #313244; }
+        input[type="text"] { flex: 1; padding: 12px; border-radius: 8px; border: none; background: #313244; color: #fff; outline: none; }
+        input[type="file"] { display: none; }
+        .btn { padding: 12px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-attach { background: #45475a; color: #fff; }
+        .btn-send { background: #a6e3a1; color: #11111b; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>?? MiPropiaIA</h2>
+    </header>
+    <div id="chat-container">
+        <div class="message ai-msg">Hola, soy tu nueva Inteligencia Artificial. ¿En qué te puedo ayudar hoy?</div>
+    </div>
+    <div id="input-area">
+        <label class="btn btn-attach" for="file-input">??</label>
+        <input type="file" id="file-input">
+        <input type="text" id="user-input" placeholder="Escribe un mensaje o consulta...">
+        <button class="btn btn-send" onclick="sendMessage()">Enviar</button>
+    </div>
+    <script>
+        function sendMessage() {
+            const input = document.getElementById("user-input");
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const container = document.getElementById("chat-container");
+            const userMsg = document.createElement("div");
+            userMsg.className = "message user-msg";
+            userMsg.textContent = text;
+            container.appendChild(userMsg);
+
+            input.value = "";
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+</body>
+</html>
